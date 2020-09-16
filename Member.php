@@ -37,11 +37,11 @@ class Member {
             'desc'      => '',
             'required'  => false,
         ],
-		'bio'           => [
-			'type'      => 'textarea',
-			'title'     => 'Bio',
-			'required'  => false,
-		],
+	'bio'          => [
+	   'type'      => 'textarea',
+	   'title'     => 'Bio',
+	   'required'  => false,
+	],
         'user_pass'     => [
             'type'      => 'password',
             'title'     => 'Password',
