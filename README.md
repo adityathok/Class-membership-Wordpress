@@ -8,5 +8,11 @@ Member::formMember($args,$action,$arraymeta);
 ```
 ada tiga jenis $action = 'add','edit','editpass'
 
-untuk edit tambahkan $args[ID] = id user
-untuk role, secara default adalah 'subscriber', dapat diset dengan $args[role] = 'role';
+untuk edit tambahkan 
+```
+$args[ID] = id user
+```
+untuk role, secara default adalah 'subscriber', dapat diset dengan 
+```
+$args[role] = 'role';
+```
