@@ -16,3 +16,4 @@ untuk role, secara default adalah 'subscriber', dapat diset dengan
 ```
 $args[role] = 'role';
 ```
+edit tidak akan menampilkan email, username dan password, gunakan 'editpass' untuk edit password 
