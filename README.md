@@ -1,5 +1,7 @@
-# Class-membership-Wordpress
+# Membership-Wordpress
 Class membership Wordpress
+=
+Kumpulan Script untuk membuat membership sederhana di Wordpress
 
 ## Setup
 Untuk menampilkan form
