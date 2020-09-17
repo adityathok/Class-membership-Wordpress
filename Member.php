@@ -3,6 +3,7 @@
  * Belajar OOP, mohon maaf.
  * Basic Member Class for Wordpress Memership
  */
+
  
 class Member {
     
@@ -31,21 +32,39 @@ class Member {
             'desc'      => '',
             'required'  => false,
         ],
-        'alamat'        => [
-            'type'      => 'textarea',
+        'alamatlengkap' => [
+            'type'      => 'alamat',
             'title'     => 'Alamat',
             'desc'      => '',
             'required'  => false,
         ],
-	'bio'          => [
-	   'type'      => 'textarea',
-	   'title'     => 'Bio',
-	   'required'  => false,
-	],
+        'alamat'        => [
+            'type'      => 'textarea',
+            'title'     => 'Detail Alamat',
+            'desc'      => '',
+            'required'  => false,
+        ],
+        'lokasi'        => [
+            'type'      => 'geolocation',
+            'title'     => 'Lokasi',
+            'desc'      => 'dapatkan lokasi, untuk lebih akurat aktifkan GPS',
+            'required'  => false,
+        ],
+		'bio'           => [
+			'type'      => 'textarea',
+			'title'     => 'Bio',
+			'required'  => false,
+		],
         'user_pass'     => [
             'type'      => 'password',
             'title'     => 'Password',
             'required'  => true,
+        ],
+        'kodepos'       => [
+            'type'      => 'text',
+            'title'     => 'Kode Pos',
+            'desc'      => '',
+            'required'  => false,
         ],
     ];
 
@@ -248,7 +267,68 @@ class Member {
             						echo '>'.$option2.'</option>';
             					}
             				echo '</select>';
-            			}  			
+            			}  
+            			//type input alamat
+            			else if($fields['type']=='alamat') {
+                            echo '<select name="'.$idmeta.'[]" required id="prov-destination" class="form-control mb-2">';
+                                echo '<option class="" value="">Provinsi</option>';
+                    				$data_province = getProvince();
+                    		        for ($i=0; $i < count($data_province); $i++) {
+                                        if(isset($value[0]) && $value[0] == $data_province[$i]['province_id']){
+                                            $select = 'selected';
+                                        } else {
+                                            $select = '';
+                                        }
+                                        echo "<option value='".$data_province[$i]['province_id']."' $select>".$data_province[$i]['province']."</option>";
+                    		        }
+                    		echo '</select>';
+                            echo '<select name="'.$idmeta.'[]" required id="city-destination" class="form-control mb-2"><option selected class="" value="" >Kota</option>';
+                    		      $data_City = getCity();
+                    		      for ($x=0; $x < count($data_City); $x++) {
+                                        $type = $data_City[$x]['type'];
+                                        if( $type == 'Kabupaten'){
+                                          $type = 'Kab';
+                                        }
+                                        if(isset($value[1]) && $value[1] == $data_City[$x]['city_id']){
+                                            $select = 'selected';
+                                        } else {
+                                            $select = '';
+                                        }
+                                        echo "<option value='".$data_City[$x]['city_id']."' class='". $data_City[$x]['province_id']."' $select>".$type." ".$data_City[$x]['city_name']."</option>";
+                    		      }
+                    		echo '</select>';
+                            echo '<select name="'.$idmeta.'[]" required id="subdistrict-destination" class="form-control mb-2">';
+                    		        if($value[2]){
+                                        $a = $value[1];
+                                        $data_Subdistrict = getSubdistrict($a);
+                                        for ($x=0; $x < count($data_Subdistrict); $x++) {
+                                            if(isset($value[2]) && $value[2] == $data_Subdistrict[$x]['subdistrict_id']){
+                                                $select = 'selected';
+                                            } else {
+                                                $select = '';
+                                            }
+                                            echo "<option value='".$data_Subdistrict[$x]['subdistrict_id']."' class='". $data_Subdistrict[$x]['city_id']."' $select>".$data_Subdistrict[$x]['subdistrict_name']."</option>";
+                                        }
+                                    }
+                    		echo '</select>';
+                        }
+                        
+            			//type input geolocation
+            			if ($fields['type']=='geolocation') {
+            			    echo '<div>';
+            			        $latitude   = isset($value[0])?$value[0]:'';
+            			        $longitude  = isset($value[1])?$value[1]:'';
+                			    echo '<span class="btn btn-sm btn-info geolocation" data-latitude="#'.$idmeta.'-1" data-longitude="#'.$idmeta.'-2" data-frame="#'.$idmeta.'-frame"><i class="fa fa-globe" aria-hidden="true"></i> Dapatkan '.$fields['title'].'</span>';
+                			    echo '<span class="btn btn-sm btn-danger resetgeolocation ml-2" data-latitude="#'.$idmeta.'-1" data-longitude="#'.$idmeta.'-2" data-frame="#'.$idmeta.'-frame">Reset</span>';
+                				echo '<input type="hidden" id="'.$idmeta.'-1" value="'.$latitude.'" name="'.$idmeta.'[]">';
+                				echo '<input type="hidden" id="'.$idmeta.'-2" value="'.$longitude.'" name="'.$idmeta.'[]">';
+                				$frame = !empty($latitude)&&!empty($longitude)?'':'d-none';
+                				echo '<div id="'.$idmeta.'-frame" class="'.$frame.'">';
+                				    $linkgeo = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
+                				    echo '<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>';
+                				echo '</div>';
+            				echo '</div>';
+            			}
             			
             			//type input hidden
             			if ($fields['type']=='hidden') {
