@@ -32,12 +32,6 @@ class Member {
             'desc'      => '',
             'required'  => false,
         ],
-        'alamatlengkap' => [
-            'type'      => 'alamat',
-            'title'     => 'Alamat',
-            'desc'      => '',
-            'required'  => false,
-        ],
         'alamat'        => [
             'type'      => 'textarea',
             'title'     => 'Detail Alamat',
@@ -50,11 +44,11 @@ class Member {
             'desc'      => 'dapatkan lokasi, untuk lebih akurat aktifkan GPS',
             'required'  => false,
         ],
-		'bio'           => [
-			'type'      => 'textarea',
-			'title'     => 'Bio',
-			'required'  => false,
-		],
+	'bio'            => [
+	     'type'      => 'textarea',
+	     'title'     => 'Bio',
+	     'required'  => false,
+	],
         'user_pass'     => [
             'type'      => 'password',
             'title'     => 'Password',
@@ -200,36 +194,36 @@ class Member {
         			$condition  = '';
         			$condition2 = '';
         			
-        		     ///jika edit dan user_login
-            		 if($idmeta=='user_login' && $action=='edit') {
-            		    echo '<div id="'.$idmeta.'" class="form-control" readonly>Username : '.$user_info->user_login.'</div>';
-            		    $condition  .= '1';
-            		    $condition2 .= '1';
-            		 } 
-            		 ///jika operator dan rayon atau jika tambah anggota keluarga
-            		 if((current_user_can('operator') && $idmeta=='rayon') || ($idmeta=='rayon' && !empty($idKK))) {
-            		    $idnya      = !empty($idKK)?$idKK:get_current_user_id();
-            		    $rayonOP    = get_user_meta( $idnya, 'rayon' , true );
-            		    echo '<input type="text" class="form-control" id="rayon" value="'.$rayonOP.'" name="rayon" readonly>';
-            		    $condition .= '1';
-            		 }
-            		 ///jika edit dan user_email
-            		 if($idmeta=='user_email' && $action=='edit') {
-            		    $condition  .= '1';
-            		    $condition2 .= '1';
-            		 }
-            		 ///jika edit dan user_pass
-            		 if($idmeta=='user_pass' && $action=='edit') {
-            		    $condition  .= '1';
-            		    $condition2 .= '1';
-            		 }
-            		 ///jika editpass dan bukan user_pass
-            		 if($idmeta!='user_pass' && $action=='editpass') {
-            		    $condition  .= '1';
-            		    $condition2 .= '1';
-            		 }  
+        		     	///jika edit dan user_login
+				 if($idmeta=='user_login' && $action=='edit') {
+				    echo '<div id="'.$idmeta.'" class="form-control" readonly>Username : '.$user_info->user_login.'</div>';
+				    $condition  .= '1';
+				    $condition2 .= '1';
+				 } 
+				 ///jika operator dan rayon atau jika tambah anggota keluarga
+				 if((current_user_can('operator') && $idmeta=='rayon') || ($idmeta=='rayon' && !empty($idKK))) {
+				    $idnya      = !empty($idKK)?$idKK:get_current_user_id();
+				    $rayonOP    = get_user_meta( $idnya, 'rayon' , true );
+				    echo '<input type="text" class="form-control" id="rayon" value="'.$rayonOP.'" name="rayon" readonly>';
+				    $condition .= '1';
+				 }
+				 ///jika edit dan user_email
+				 if($idmeta=='user_email' && $action=='edit') {
+				    $condition  .= '1';
+				    $condition2 .= '1';
+				 }
+				 ///jika edit dan user_pass
+				 if($idmeta=='user_pass' && $action=='edit') {
+				    $condition  .= '1';
+				    $condition2 .= '1';
+				 }
+				 ///jika editpass dan bukan user_pass
+				 if($idmeta!='user_pass' && $action=='editpass') {
+				    $condition  .= '1';
+				    $condition2 .= '1';
+				 }  
             		 
-            		//show label             		    
+            	    //show label             		    
                     if ($fields['type']!=='hidden' && empty($condition2)) {
                         echo '<label for="'.$idmeta.'" class="font-weight-bold">'.$fields['title'].$reqstar.'</label>';
                     }
@@ -268,51 +262,7 @@ class Member {
             					}
             				echo '</select>';
             			}  
-            			//type input alamat
-            			else if($fields['type']=='alamat') {
-                            echo '<select name="'.$idmeta.'[]" required id="prov-destination" class="form-control mb-2">';
-                                echo '<option class="" value="">Provinsi</option>';
-                    				$data_province = getProvince();
-                    		        for ($i=0; $i < count($data_province); $i++) {
-                                        if(isset($value[0]) && $value[0] == $data_province[$i]['province_id']){
-                                            $select = 'selected';
-                                        } else {
-                                            $select = '';
-                                        }
-                                        echo "<option value='".$data_province[$i]['province_id']."' $select>".$data_province[$i]['province']."</option>";
-                    		        }
-                    		echo '</select>';
-                            echo '<select name="'.$idmeta.'[]" required id="city-destination" class="form-control mb-2"><option selected class="" value="" >Kota</option>';
-                    		      $data_City = getCity();
-                    		      for ($x=0; $x < count($data_City); $x++) {
-                                        $type = $data_City[$x]['type'];
-                                        if( $type == 'Kabupaten'){
-                                          $type = 'Kab';
-                                        }
-                                        if(isset($value[1]) && $value[1] == $data_City[$x]['city_id']){
-                                            $select = 'selected';
-                                        } else {
-                                            $select = '';
-                                        }
-                                        echo "<option value='".$data_City[$x]['city_id']."' class='". $data_City[$x]['province_id']."' $select>".$type." ".$data_City[$x]['city_name']."</option>";
-                    		      }
-                    		echo '</select>';
-                            echo '<select name="'.$idmeta.'[]" required id="subdistrict-destination" class="form-control mb-2">';
-                    		        if($value[2]){
-                                        $a = $value[1];
-                                        $data_Subdistrict = getSubdistrict($a);
-                                        for ($x=0; $x < count($data_Subdistrict); $x++) {
-                                            if(isset($value[2]) && $value[2] == $data_Subdistrict[$x]['subdistrict_id']){
-                                                $select = 'selected';
-                                            } else {
-                                                $select = '';
-                                            }
-                                            echo "<option value='".$data_Subdistrict[$x]['subdistrict_id']."' class='". $data_Subdistrict[$x]['city_id']."' $select>".$data_Subdistrict[$x]['subdistrict_name']."</option>";
-                                        }
-                                    }
-                    		echo '</select>';
-                        }
-                        
+            			                        
             			//type input geolocation
             			if ($fields['type']=='geolocation') {
             			    echo '<div>';
