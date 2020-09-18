@@ -308,7 +308,8 @@ class Member {
         	foreach ($arraymeta as $idmeta => $fields) {
         		$value = get_user_meta($user_id,$idmeta,true);
         		if ($idmeta=="user_login") {
-        			echo '<tr><td class="font-weight-bold">'.$fields['title'].'</td><td>'.$value.'</td></tr>';
+        		    $user_info = get_userdata($user_id);
+        		    echo '<tr><td class="font-weight-bold">'.$fields['title'].'</td><td>'.$user_info->user_login.'</td></tr>';
         		}	
         		if (!($idmeta=="user_pass" || $idmeta=="user_email" || $idmeta=="user_login")) {
         			echo '<tr class="fields-'.$idmeta.'">';	
@@ -317,7 +318,13 @@ class Member {
         					foreach ($fields['option'] as $option1 => $option2 ) {
         						if ($value==$option1) { echo '<td>'.$option2.'</td>';}
         					}
-        				} else  {
+					} else if($fields['type']=='geolocation')  {
+					    $latitude   = isset($value[0])?$value[0]:'';
+					    $longitude  = isset($value[1])?$value[1]:'';
+        				    $linkgeo    = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
+        				    $iframe     = '<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>';
+        				    echo '<td>'.$iframe.'</td>';
+        				}  else  {
         					echo '<td>'.$value.'</td>';
         				}					
         			echo '</tr>';
