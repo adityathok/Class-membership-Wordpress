@@ -125,7 +125,22 @@ class Member {
     		//update meta user
     		foreach ($args as $id => $value) {
     			if (!($id=="user_pass" || $id=="user_email" || $id=="user_login")) {
-    				update_user_meta( $user_id, $id, $value);
+			    //if not upload file
+			    if ($id!='-upload-file') {
+				    update_user_meta( $user_id, $id, $value);
+			    } else {
+				//print_r($value);
+				foreach($value as $idfile => $val ) {
+				    //upload file
+				    $attachment_id = media_handle_upload( $idfile, 1 );
+				    //delete previous file 
+				    if (get_user_meta($user_id, $idfile,true)) {
+							wp_delete_attachment( get_user_meta($user_id, $idfile,true) );
+						}
+						//update to meta user
+				    update_user_meta( $user_id, $idfile, $attachment_id);
+				}
+			    }
     			}
     		}
     		
@@ -161,6 +176,9 @@ class Member {
         }
         ///edit data
         if(isset($_POST['inpudata']) && $action=='edit') {
+	    if(isset($_FILES)) {
+                $_POST['-upload-file'] = $_FILES;
+            }
             echo self::updateMember($_POST);
         }
         
@@ -279,6 +297,16 @@ class Member {
                 				echo '</div>';
             				echo '</div>';
             			}
+				 
+				//type input file
+            			if ($fields['type']=='file') {
+            			    
+            				if($value && wp_get_attachment_url($value)) {
+            				    echo '<a href="'.wp_get_attachment_url($value).'" target="_blank" class="d-block my-2"><i class="fa fa-file fa-2x"></i></a>';
+            				}
+            				
+            				echo '<input type="file" id="'.$idmeta.'" class="form-control-file" name="'.$idmeta.'" '.$req.' '.$read.'>';
+            			}
             			
             			//type input hidden
             			if ($fields['type']=='hidden') {
@@ -314,19 +342,27 @@ class Member {
         		if (!($idmeta=="user_pass" || $idmeta=="user_email" || $idmeta=="user_login")) {
         			echo '<tr class="fields-'.$idmeta.'">';	
         				echo '<td class="font-weight-bold">'.$fields['title'].'</td>';
+				
         				if ($fields['type']=='option') {
         					foreach ($fields['option'] as $option1 => $option2 ) {
         						if ($value==$option1) { echo '<td>'.$option2.'</td>';}
         					}
+						
 					} else if($fields['type']=='geolocation')  {
 					    $latitude   = isset($value[0])?$value[0]:'';
 					    $longitude  = isset($value[1])?$value[1]:'';
         				    $linkgeo    = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
         				    $iframe     = '<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>';
         				    echo '<td>'.$iframe.'</td>';
+						
+					} else if($fields['type']=='file')  {
+            				    $file = ($value && wp_get_attachment_url($value))?'<a href="'.wp_get_attachment_url($value).'" target="_blank" class="d-block my-2"><i class="fa fa-file fa-2x"></i></a>':'';
+        				    echo '<td>'.$file.'</td>';
+						
         				}  else  {
         					echo '<td>'.$value.'</td>';
-        				}					
+        				}	
+				
         			echo '</tr>';
         		}
         	}
