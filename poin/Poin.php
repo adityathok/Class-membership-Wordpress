@@ -37,7 +37,7 @@ Class Poin {
         dbDelta($sql);
     }
     
-    /// add new notif to User ID
+    /// add new poin to User ID
     public function add($userid=null,$type=null,$detail=null,$poin=null){
         if($userid && $detail ) {
             
@@ -59,7 +59,7 @@ Class Poin {
         }
     }
     
-    /// deleted notif by ID
+    /// deleted poin by ID
     public function delete($id=null) {
         $this->wpdb->delete($this->tablename, array(
             'id'          => $id,
