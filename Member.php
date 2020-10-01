@@ -68,7 +68,7 @@ class Member {
         $username   = isset($args['user_login'])&&!empty($args['user_login'])?$args['user_login']:'';
         $email      = isset($args['user_email'])&&!empty($args['user_email'])?$args['user_email']:'';
         $role       = isset($args['role'])&&!empty($args['role'])?$args['role']:'subscriber';
-        
+        $success    = false;
         if ( !$username ):
             $message = '<div class="alert alert-danger">Maaf, username wajib diisi.</div>';
         elseif ( username_exists($username) ):
@@ -96,8 +96,12 @@ class Member {
             $succses = true;
             
         endif;
+	    
+        $result             = [];
+        $result['message']  = $message;
+        $result['success']  = $success;
         
-        return $message;
+        return $result;
     }
     
     public static function updateMember($args) {
