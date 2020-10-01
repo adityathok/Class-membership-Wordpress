@@ -67,7 +67,7 @@ class Member {
         $password   = isset($args['user_pass'])&&!empty($args['user_pass'])?$args['user_pass']:'';
         $username   = isset($args['user_login'])&&!empty($args['user_login'])?$args['user_login']:'';
         $email      = isset($args['user_email'])&&!empty($args['user_email'])?$args['user_email']:'';
-        $role       = isset($args['role'])&&!empty($args['role'])?$args['role']:'jemaat';
+        $role       = isset($args['role'])&&!empty($args['role'])?$args['role']:'subscriber';
         
         if ( !$username ):
             $message = '<div class="alert alert-danger">Maaf, username wajib diisi.</div>';
