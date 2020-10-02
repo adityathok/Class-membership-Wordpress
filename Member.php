@@ -414,9 +414,28 @@ class Member {
 					} else if($fields['type']=='geolocation')  {
 					    $latitude   = isset($value[0])?$value[0]:'';
 					    $longitude  = isset($value[1])?$value[1]:'';
-        				    $linkgeo    = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
-        				    $iframe     = !empty($latitude)&&!empty($longitude)?'<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>':'';
-        				    echo '<td>'.$iframe.'</td>';
+        				    echo '<td>';
+            				    if(!empty($latitude)&&!empty($longitude)): ?>
+                				        <div id="<?= $idmeta;?>-frame-map"></div>
+                				        <script>
+                				            (function($){
+                				            $( document ).ready(function() {
+                				                 $('#<?= $idmeta;?>-frame-map').height(350);
+                                                 var mapOptions = {
+                                                    center: [<?= $latitude;?>, <?= $longitude;?>],
+                                                    zoom: 15,
+                                                 }
+                                                 var map = new L.map('<?= $idmeta;?>-frame-map', mapOptions);
+                                                 var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                                                 map.addLayer(layer);
+                                                 var marker = L.marker([<?= $latitude;?>, <?= $longitude;?>]);
+                                                 marker.addTo(map);
+                				            });
+                				            })(jQuery);
+                				        </script>
+                			     <?php
+                			     endif;
+					     echo '</td>';
 						
 					} else if($fields['type']=='file')  {
             				    $file = ($value && wp_get_attachment_url($value))?'<a href="'.wp_get_attachment_url($value).'" target="_blank" class="d-block my-2"><i class="fa fa-file fa-2x"></i></a>':'';
