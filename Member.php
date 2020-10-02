@@ -284,6 +284,35 @@ class Member {
             					}
             				echo '</select>';
             			}  
+				 
+				 
+            			//type input alamat
+            			else if ($fields['type']=='alamat') {
+        			        $provinsi   = isset($value[0])?$value[0]:'';
+        			        $kota       = isset($value[1])?$value[1]:'';
+        			        $kecamatan  = isset($value[2])?$value[2]:'';
+            			    //provinsi
+            			    echo '<div>';
+                			    echo '<label for="'.$idmeta.'-provinsi" class="col-form-label">Provinsi</label>';
+                				echo '<select id="'.$idmeta.'-provinsi" class="form-control alamat-provinsi" name="'.$idmeta.'[]" data-value="'.$provinsi.'" '.$req.'>';
+                					echo '<option value="">Pilih Provinsi</option>';
+                				echo '</select>';
+            				echo '</div>';
+            				//kota
+            				echo '<div>';
+                			    echo '<label for="'.$idmeta.'-kota" class="col-form-label">Kota</label>';
+                				echo '<select id="'.$idmeta.'-kota" class="form-control alamat-kota" name="'.$idmeta.'[]"  data-value="'.$kota.'" '.$req.'>';
+                					echo '<option value="">Pilih Kota</option>';
+                				echo '</select>';
+            				echo '</div>';
+            				//kecamatan
+            				echo '<div>';
+                			    echo '<label for="'.$idmeta.'-kecamatan" class="col-form-label">Kecamatan</label>';
+                				echo '<select id="'.$idmeta.'-kecamatan" class="form-control alamat-kecamatan" name="'.$idmeta.'[]" data-value="'.$kecamatan.'" '.$req.'>';
+                					echo '<option value="">Pilih Kecamatan</option>';
+                				echo '</select>';
+            				echo '</div>';
+            			}
             			                        
             			//type input geolocation
             			if ($fields['type']=='geolocation') {
