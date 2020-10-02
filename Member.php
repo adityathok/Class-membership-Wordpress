@@ -325,14 +325,38 @@ class Member {
             			    echo '<div>';
             			        $latitude   = isset($value[0])?$value[0]:'';
             			        $longitude  = isset($value[1])?$value[1]:'';
-                			    echo '<span class="btn btn-sm btn-info geolocation" data-latitude="#'.$idmeta.'-1" data-longitude="#'.$idmeta.'-2" data-frame="#'.$idmeta.'-frame"><i class="fa fa-globe" aria-hidden="true"></i> Dapatkan '.$fields['title'].'</span>';
+                			    echo '<span class="btn btn-sm btn-info geolocation" data-latitude="#'.$idmeta.'-1" data-longitude="#'.$idmeta.'-2" data-frame="'.$idmeta.'-frame"><i class="fa fa-globe" aria-hidden="true"></i> Dapatkan '.$fields['title'].'</span>';
                 			    echo '<span class="btn btn-sm btn-danger resetgeolocation ml-2" data-latitude="#'.$idmeta.'-1" data-longitude="#'.$idmeta.'-2" data-frame="#'.$idmeta.'-frame">Reset</span>';
                 				echo '<input type="hidden" id="'.$idmeta.'-1" value="'.$latitude.'" name="'.$idmeta.'[]">';
                 				echo '<input type="hidden" id="'.$idmeta.'-2" value="'.$longitude.'" name="'.$idmeta.'[]">';
                 				$frame = !empty($latitude)&&!empty($longitude)?'':'d-none';
-                				echo '<div id="'.$idmeta.'-frame" class="'.$frame.'">';
-                				    $linkgeo = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
-                				    echo '<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>';
+                				echo '<div id="'.$idmeta.'-frame" class="'.$frame.' my-3">';
+                				    if(!empty($latitude)&&!empty($longitude)): ?>
+                				        <div id="<?= $idmeta;?>-frame-map"></div>
+                				        <script>
+                				            (function($){
+                				            $( document ).ready(function() {
+                				                 $('#<?= $idmeta;?>-frame-map').height(350);
+                                                 var mapOptions = {
+                                                    center: [<?= $latitude;?>, <?= $longitude;?>],
+                                                    zoom: 15,
+                                                 }
+                                                 var map = new L.map('<?= $idmeta;?>-frame-map', mapOptions);
+                                                 var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                                                 map.addLayer(layer);
+                                                 var marker = L.marker([<?= $latitude;?>, <?= $longitude;?>], {
+                                                    draggable: true
+                                                });
+                                                 marker.addTo(map);
+                                                 marker.on('dragend', function (e) {
+                                            	    $('#<?= $idmeta;?>-1').val(marker.getLatLng().lat);
+                                            	    $('#<?= $idmeta;?>-2').val(marker.getLatLng().lng);
+                                                });
+                				            });
+                				            })(jQuery);
+                				        </script>
+                				    <?php
+                				    endif;
                 				echo '</div>';
             				echo '</div>';
             			}
