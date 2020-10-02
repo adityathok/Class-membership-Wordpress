@@ -391,7 +391,7 @@ class Member {
 					    $latitude   = isset($value[0])?$value[0]:'';
 					    $longitude  = isset($value[1])?$value[1]:'';
         				    $linkgeo    = !empty($latitude)&&!empty($longitude)?'https://maps.google.com/maps?q='.$value[0].', '.$value[1].'&z=15&output=embed':'';
-        				    $iframe     = '<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>';
+        				    $iframe     = !empty($latitude)&&!empty($longitude)?'<iframe src="'.$linkgeo.'" width="100%" height="270" frameborder="0" style="border:0;margin-top:1rem;"></iframe>':'';
         				    echo '<td>'.$iframe.'</td>';
 						
 					} else if($fields['type']=='file')  {
