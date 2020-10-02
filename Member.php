@@ -288,29 +288,35 @@ class Member {
 				 
             			//type input alamat
             			else if ($fields['type']=='alamat') {
-        			        $provinsi   = isset($value[0])?$value[0]:'';
-        			        $kota       = isset($value[1])?$value[1]:'';
-        			        $kecamatan  = isset($value[2])?$value[2]:'';
-            			    //provinsi
-            			    echo '<div>';
+        			        $provinsi       = isset($value[0][0])?$value[0][0]:'';
+        			        $provinsiname   = isset($value[0][1])?$value[0][1]:'';
+        			        $kota           = isset($value[1][0])?$value[1][0]:'';
+        			        $kotaname       = isset($value[1][1])?$value[1][1]:'';
+        			        $kecamatan      = isset($value[2][0])?$value[2][0]:'';
+        			        $kecamatanname  = isset($value[2][1])?$value[2][1]:'';
+				       //provinsi
+				      echo '<div>';
                 			    echo '<label for="'.$idmeta.'-provinsi" class="col-form-label">Provinsi</label>';
-                				echo '<select id="'.$idmeta.'-provinsi" class="form-control alamat-provinsi" name="'.$idmeta.'[]" data-value="'.$provinsi.'" '.$req.'>';
+                				echo '<select id="'.$idmeta.'-provinsi" class="form-control alamat-provinsi" name="'.$idmeta.'[0][]" data-value="'.$provinsi.'" '.$req.'>';
                 					echo '<option value="">Pilih Provinsi</option>';
                 				echo '</select>';
+                				echo '<input type="hidden" id="'.$idmeta.'-provinsi-name" class="alamat-provinsi-name" name="'.$idmeta.'[0][]" value="'.$provinsiname.'" >';
             				echo '</div>';
             				//kota
             				echo '<div>';
                 			    echo '<label for="'.$idmeta.'-kota" class="col-form-label">Kota</label>';
-                				echo '<select id="'.$idmeta.'-kota" class="form-control alamat-kota" name="'.$idmeta.'[]"  data-value="'.$kota.'" '.$req.'>';
+                				echo '<select id="'.$idmeta.'-kota" class="form-control alamat-kota" name="'.$idmeta.'[1][]"  data-value="'.$kota.'" '.$req.'>';
                 					echo '<option value="">Pilih Kota</option>';
                 				echo '</select>';
+                				echo '<input type="hidden" id="'.$idmeta.'-kota-name" class="alamat-kota-name" name="'.$idmeta.'[1][]" value="'.$kotaname.'" >';
             				echo '</div>';
             				//kecamatan
             				echo '<div>';
                 			    echo '<label for="'.$idmeta.'-kecamatan" class="col-form-label">Kecamatan</label>';
-                				echo '<select id="'.$idmeta.'-kecamatan" class="form-control alamat-kecamatan" name="'.$idmeta.'[]" data-value="'.$kecamatan.'" '.$req.'>';
+                				echo '<select id="'.$idmeta.'-kecamatan" class="form-control alamat-kecamatan" name="'.$idmeta.'[2][]" data-value="'.$kecamatan.'" '.$req.'>';
                 					echo '<option value="">Pilih Kecamatan</option>';
                 				echo '</select>';
+                				echo '<input type="hidden" id="'.$idmeta.'-kecamatan-name" class="alamat-kecamatan-name" name="'.$idmeta.'[2][]" value="'.$kecamatanname.'" >';
             				echo '</div>';
             			}
             			                        
@@ -392,6 +398,14 @@ class Member {
             				    $file = ($value && wp_get_attachment_url($value))?'<a href="'.wp_get_attachment_url($value).'" target="_blank" class="d-block my-2"><i class="fa fa-file fa-2x"></i></a>':'';
         				    echo '<td>'.$file.'</td>';
 						
+    					} else if($fields['type']=='alamat')  {
+						$provinsi       = isset($value[0][0])?$value[0][0]:'';
+						$provinsiname   = isset($value[0][1])?$value[0][1]:'';
+						$kota           = isset($value[1][0])?$value[1][0]:'';
+						$kotaname       = isset($value[1][1])?$value[1][1]:'';
+						$kecamatan      = isset($value[2][0])?$value[2][0]:'';
+						$kecamatanname  = isset($value[2][1])?$value[2][1]:'';
+            				    	echo '<td>'.$kecamatanname.', '.$kotaname.', '.$provinsiname.'</td>';
         				}  else  {
         					echo '<td>'.$value.'</td>';
         				}	
