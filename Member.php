@@ -187,7 +187,9 @@ class Member {
         }
         
         echo '<form name="input" method="POST" id="formMember" action="">';
-        
+	    
+            echo $action=='edit'?'<h4 class="font-weight-bold">Edit Profil</h4><hr>':'';
+	    
             echo '<input type="hidden" id="role" value="'.$role.'" name="role">';
             
             ///edit data
@@ -222,13 +224,6 @@ class Member {
 				    $condition  .= '1';
 				    $condition2 .= '1';
 				 } 
-				 ///jika operator dan rayon atau jika tambah anggota keluarga
-				 if((current_user_can('operator') && $idmeta=='rayon') || ($idmeta=='rayon' && !empty($idKK))) {
-				    $idnya      = !empty($idKK)?$idKK:get_current_user_id();
-				    $rayonOP    = get_user_meta( $idnya, 'rayon' , true );
-				    echo '<input type="text" class="form-control" id="rayon" value="'.$rayonOP.'" name="rayon" readonly>';
-				    $condition .= '1';
-				 }
 				 ///jika edit dan user_email
 				 if($idmeta=='user_email' && $action=='edit') {
 				    $condition  .= '1';
