@@ -172,20 +172,25 @@
         justgBackend.loadFormCity();
         justgBackend.loadFormSubdistrict();
     }
+    function setloadForm(){
+        var text = $('.alamat-provinsi option:selected').text();
+        $('.alamat-provinsi-name').val(text);
+        var text = $('.alamat-kota option:selected').text();
+        $('.alamat-kota-name').val(text);
+        var text = $('.alamat-kecamatan option:selected').text();
+        $('.alamat-kecamatan-name').val(text);
+    }
     $(document).on('change','.alamat-provinsi', function(){
         justgBackend.loadFormCity();
         justgBackend.loadFormSubdistrict();
-        var text = $('.alamat-provinsi option:selected').text();
-        $('.alamat-provinsi-name').val(text);
+        setloadForm();
     });
     $(document).on('change','.alamat-kota', function(){
         justgBackend.loadFormSubdistrict();
-        var text = $('.alamat-kota option:selected').text();
-        $('.alamat-kota-name').val(text);
+        setloadForm();
     });
     $(document).on('change','.alamat-kecamatan', function(){
-        var text = $('.alamat-kecamatan option:selected').text();
-        $('.alamat-kecamatan-name').val(text);
+        setloadForm();
     });
     
     $(document).on('change','.checkUsername', function(){
