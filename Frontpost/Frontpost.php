@@ -136,14 +136,16 @@ class Frontpost {
                 //-upload-file
                 if($id=='-upload-file'){
                     foreach($value as $idfile => $val ) {
-    				    //upload file
-    				    $attachment_id = media_handle_upload( $idfile, $pid);
-    				    //delete previous file 
-    				    if (get_post_meta($pid, $idfile,true)) {
-    							wp_delete_attachment( get_post_meta($pid, $idfile,true) );
-    						}
-    						//update to meta user
-    				    update_post_meta( $pid, $idfile, $attachment_id);
+			    if(isset($val['name'])&&$val['name']):
+			    //upload file
+			    $attachment_id = media_handle_upload( $idfile, $pid);
+			    //delete previous file 
+			    if (get_post_meta($pid, $idfile,true)) {
+				wp_delete_attachment( get_post_meta($pid, $idfile,true) );
+			    }
+		    	    //update to meta user
+			    update_post_meta( $pid, $idfile, $attachment_id);
+			    endif;
                     }
                 }
             }
