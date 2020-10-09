@@ -165,6 +165,19 @@ class Frontpost {
     
     public static function hapusPost($id=null) {
         if($id) {
+	    ///get all attachment by id post
+            $args = array(
+        		'post_type'     => 'attachment',
+        		'post_status'   => null,
+        		'post_parent'   => $post->ID,
+        		); 
+        	$attachments = get_posts($args);
+            if(count($attachments) > 1) {
+                foreach ($attachments as $attachment ) {
+        			//delete attachment
+        			wp_delete_attachment( $attachment->ID );
+                } 
+            }
             ///deleted data post
             wp_delete_post( $id, true );
             return true;
