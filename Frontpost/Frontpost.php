@@ -191,13 +191,22 @@ class Frontpost {
         $post_author    = isset($args['ID'])&&!empty(get_post_field('post_author',$args['ID']))?get_post_field('post_author',$args['ID']):get_current_user_id();
         $arraymeta      = !empty($arraymeta)?$arraymeta:self::$metakey;
         
+        $antispam       = true;
+        
+        //check antispam
+        if(isset($_POST['g-recaptcha-response']) && empty($_POST['g-recaptcha-response'])) {
+            $antispam   = false;
+        }
+        
         ///submit data
-        if(isset($_POST['inpudata'])) {
+        if(isset($_POST['inpudata']) && $antispam==true) {
 	        if(isset($_FILES)&&!empty($_FILES)) {
                 $_POST['-upload-file'] = $_FILES;
             }
             $result = self::submitPost($_POST);
             echo implode(" ",$result['message']);
+        } else if(isset($_POST['inpudata']) && $antispam==false) {
+            echo '<div class="alert alert-danger">Please verify Antispam</div>';
         }
         
         echo '<form name="input" method="POST" id="formPost" action="" enctype="multipart/form-data">';
@@ -444,6 +453,14 @@ class Frontpost {
             			//type input hidden
             			if ($fields['type']=='hidden') {
             				echo '<input type="hidden" id="'.$idmeta.'" value="'.$value.'" name="'.$idmeta.'">';
+            			}
+            		
+            		    	//type recaptcha
+            			if ($fields['type']=='recaptcha' && !empty($fields['sitekey']) && !empty($fields['secret'])) {
+            			    echo '<div class="'.$idmeta.' text-right">';
+				    echo '<div id="'.$idmeta.'" class="g-recaptcha" data-callback="checkCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="'.$fields['sitekey'].'"></div>';
+				    echo '<div id="msg'.$idmeta.'"> </div>';
+				    echo '</div>';
             			}
             		
             			if (isset($fields['desc'])&&!empty($fields['desc'])) {
