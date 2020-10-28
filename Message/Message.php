@@ -75,6 +75,14 @@ Class Message {
         endif;
     }
     
+    /// count notif new message by by sender ID & receiver ID
+    public function newmessage($sender=null,$receiver=null) {
+        if($sender && $receiver ):
+            $data = $this->wpdb->get_var("SELECT COUNT(*) FROM $this->tablename WHERE sender = '$sender' AND receiver = '$receiver' AND status = 'unread'");
+            return $data;
+        endif;
+    }
+    
     /// get message by sender ID & receiver ID
     public function getmessage($sender=null,$receiver=null) {
         if($sender&&$receiver):
@@ -140,3 +148,62 @@ function push_message($sender,$receiver,$body,$detail){
     $Message->add($sender,$receiver,$body,$detail);
 }
 
+
+///endpoint
+add_action( 'rest_api_init', function () {
+    register_rest_route( 'message/v1', '/updatenotif/', array(
+      'methods' => 'GET',
+      'callback' => 'ww_updatenotif',
+    ) );
+    register_rest_route( 'message/v1', '/delete/', array(
+      'methods' => 'GET',
+      'callback' => 'ww_deletechat',
+    ) );
+} );
+
+//get count new notif
+function ww_updatenotif($request) {
+	$sender             = $request->get_param( 'sender' );
+	$receiver           = $request->get_param( 'receiver' );
+	
+	$data               = [];
+	$data['sender']     = $sender;
+	$data['receiver']   = $receiver;
+	
+    $Message            = new Message();
+    $data['result']     = $Message->newmessage($sender,$receiver);
+    
+    return $data;
+    
+	wp_die();
+}
+
+//delete chat by id
+function ww_deletechat($request) {
+	$id                 = $request->get_param( 'id' );
+	
+	$data               = [];
+	if($id):
+    	$data['id']         = $id;
+        $Message            = new Message();
+        $Message->delete($id);
+        $data['result']     = 'Success';
+    else:
+        $data['result']     = 'Failed, no ID';
+    endif;
+    
+    return $data;
+    
+	wp_die();
+}
+
+///add var javascript to head wp
+function ww_message_head(){
+    ?>
+    <script>
+        var url_updatenotif = '<?= home_url()?>/wp-json/message/v1/updatenotif/';
+        var url_deletechat  = '<?= home_url()?>/wp-json/message/v1/delete/';
+    </script>
+    <?php
+}
+add_action('wp_head','ww_message_head');
