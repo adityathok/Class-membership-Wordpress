@@ -68,7 +68,7 @@ if($to) {
                     				echo '<div id=boxchat-'.$data->id.' class="d-flex boxchat '.$class1.'">';
                     				
                     				    ///show buble message
-                        				echo '<div class="chat-bubble alert clearfix w-75 py-1 px-2 mb-2 '.$class2.'" data-date="'.$tgl.'">';
+                        				echo '<div class="chat-bubble alert clearfix w-75 py-1 px-2 mb-2 '.$class2.'" data-date="'.$tgl.'" data-id="'.$data->id.'">';
                     				
                         				    //show message include is post
                         				    if($post_msg):
@@ -83,11 +83,16 @@ if($to) {
                                 				if (get_current_user_id() == $pengirim) {
                                 				    $clastatus = ($status=='read')?'text-success':'';
                                 				    echo '<small class="text-secondary mx-1"><i class="fa fa-check '.$clastatus.'" aria-hidden="true"></i></small>';
-                                				    // echo '<small class="badge badge-danger float-right font-weight-normal mx-1 hapuspesanchat" data-id="'.$id.'">hapus</small>';
                                 				}
                             				    echo '<small class="clock-message">'.$jam.'</small>';
                             				echo '</div>';
                             			echo '</div>';
+                            			
+                            			///deleted chatbox
+                            			if (get_current_user_id() == $pengirim) {
+                				            echo '<small class="px-1 deletechat d-none btn btn-link" data-id="'.$id.'" title="delete"><i class="fa fa-times fa-2x text-danger"></i></small>';
+                            			}
+                            			
                     				echo '</div>';	
                     			}
                 			}
@@ -108,9 +113,10 @@ if($to) {
 		<div class="form-group text-right">
 			<button title="Kirim" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Kirim</button>
 		</div>
-		<input type="hidden" name="sender" value="<?= get_current_user_id(); ?>" />
-		<input type="hidden" name="receiver" value="<?= $to; ?>" />
+		<input type="hidden" name="sender" id="m-sender" value="<?= get_current_user_id(); ?>" />
+		<input type="hidden" name="receiver" id="m-receiver" value="<?= $to; ?>" />
 		<input type="hidden" name="post" value="<?= $post; ?>" />
+		<input type="hidden" name="url" id="m-url" value="<?= get_author_posts_url(get_current_user_id())?>?page=chat&to=<?= $to; ?>" />
 	</form>
 	
 	<script>
@@ -120,13 +126,50 @@ if($to) {
             objDiv.scrollTop = objDiv.scrollHeight;
             objDiv.scrollIntoView();
             
-            var dates = [];
-            $('.chat-bubble').each(function(index, element) {
-                var date = $(element).data('date');
-                dates.push(date);
+            function updateChat() {
+                $("#message-boc .newnotif").remove();
+                var send1       = $("#m-sender").val();
+                var send2       = $("#m-receiver").val();
+                var url         = $("#m-url").val();
+                $.ajax({
+                    type    : "GET",
+                    url     : url_updatenotif,
+                    data    : {
+                        sender      : send2,
+                        receiver    : send1,
+                    }, 
+                    success :function(data) {
+                        if(data.result > 0) {
+                            $("#message-boc").append('<div class="newnotif"><a class="badge badge-info" href="'+url+'">'+data.result+' Pesan baru</a></div>');
+                        }
+                    },
+                });
+            }
+            setInterval(function(){ 
+                updateChat();   
+            }, 5000);
+            
+            $('.chat-bubble').on('mousedown touchstart', function(e) {
+                var id = $(this).data('id');
+                $("#boxchat-"+id+" .deletechat").toggleClass('d-none');
             });
-            var maxDate = dates.reduce(function (a, b) { return a > b ? a : b; });
-            console.log(maxDate);
+            
+            $(document).on('click','.deletechat', function(e) {
+                var id = $(this).data('id');
+                if(confirm("Hapus pesan ini ?") == true) {
+                    $.ajax({
+                        type    : "GET",
+                        url     : url_deletechat,
+                        data    : {id : id,}, 
+                        success :function(data) {
+                            if(data.result === 'Success') {
+                                $("#boxchat-"+id).hide('slow', function(){ $("#boxchat-"+id).remove(); });
+                            }
+                        },
+                    });
+                }
+            });
+            
 	    });
 	</script>
 	
