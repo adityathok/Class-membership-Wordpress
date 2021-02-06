@@ -460,6 +460,7 @@ class Frontpost {
             			    echo '<div class="'.$idmeta.' text-right">';
 				    echo '<div id="'.$idmeta.'" class="g-recaptcha" data-callback="checkCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="'.$fields['sitekey'].'"></div>';
 				    echo '<div id="msg'.$idmeta.'"> </div>';
+        			    echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
 				    echo '</div>';
             			}
             		
