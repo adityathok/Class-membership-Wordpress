@@ -169,13 +169,13 @@ class Frontpost {
             $args = array(
         		'post_type'     => 'attachment',
         		'post_status'   => null,
-        		'post_parent'   => $post->ID,
+        		'post_parent'   => $id,
         		); 
         	$attachments = get_posts($args);
             if(count($attachments) > 1) {
                 foreach ($attachments as $attachment ) {
-        			//delete attachment
-        			wp_delete_attachment( $attachment->ID );
+        		//delete attachment
+        		wp_delete_attachment( $attachment->ID );
                 } 
             }
             ///deleted data post
