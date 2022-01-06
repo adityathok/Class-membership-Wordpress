@@ -292,6 +292,24 @@ class Frontpost {
             				echo '</select>';
             			}
             			
+            			//type input checkbox
+            			else if ($fields['type']=='checkbox') {
+					$val = $value?$value:[];
+					foreach ($fields['option'] as $option1 => $option2 ) {
+						$option1	= is_numeric($option1)?$option2:$option1;
+						$stringname	= str_replace(' ', '', $option2);
+						$checked	= in_array($option1, $val)?'checked':'';
+						echo '
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="'.$option1.'" name="'.$idmeta.'[]" id="Check'.$stringname.'" '.$checked.'>
+							<label class="form-check-label" for="Check'.$stringname.'">
+								'.$option2.'
+							</label>
+						</div>
+						';
+					}
+            			}
+				 
             			//type input category
             			else if ($fields['type']=='category') {
             				echo '<select id="'.$idmeta.'" class="form-control" name="'.$idmeta.'" '.$req.'>';
