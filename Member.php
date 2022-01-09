@@ -390,6 +390,7 @@ class Member {
             $userdata   = get_userdata( $user_id );
             $arraymeta  = self::$metakey;
             
+            echo '<div class="table-responsive table-lihatMember">';
             echo '<table class="table">';
         	foreach ($arraymeta as $idmeta => $fields) {
         		$value = get_user_meta($user_id,$idmeta,true);
@@ -402,9 +403,11 @@ class Member {
         				echo '<td class="font-weight-bold">'.$fields['title'].'</td>';
 				
         				if ($fields['type']=='option') {
+        				    echo '<td>';
         					foreach ($fields['option'] as $option1 => $option2 ) {
-        						if ($value==$option1) { echo '<td>'.$option2.'</td>';}
+							echo $value==$option1?$option2:'';
         					}
+        				    echo '</td>';
 						
 					} else if($fields['type']=='geolocation')  {
 					    $latitude   = isset($value[0])?$value[0]:'';
@@ -452,6 +455,7 @@ class Member {
         		}
         	}
         	echo '</table>';
+        	echo '</div>';
             
         endif;
     }
